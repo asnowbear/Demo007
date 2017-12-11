@@ -29,7 +29,11 @@ WrokMap.prototype.addTools = function(tools) {
 }
 
 WrokMap.prototype._handleEvent = function (e) {
-  
+  var event = this._coordinateMapping(e)
+
+  tools.forEach(function(tool){
+    tool._handleEvent()
+  })
 }
 
 WrokMap.prototype._addEventsToMap = function () {
@@ -37,6 +41,19 @@ WrokMap.prototype._addEventsToMap = function () {
   var handleEventFn = this._handleEvent
   
   for (var key in EventTag) {
-    mapDom.addEventListener(key, handleEventFn)
+    mapDom.addEventListener(EventTag[key], handleEventFn)
   }
+}
+
+
+WrokMap.prototype._coordinateMapping = function (origE) {
+  var newE = {
+    oldEvent: origE,
+    type: origE.type,
+    mapX:
+    mapY:
+  }
+
+  return newE
+
 }
