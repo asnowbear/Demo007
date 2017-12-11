@@ -13,6 +13,21 @@ function WrokMap (config) {
   
 }
 
+WrokMap.prototype.refresh = function() {
+  this.tools.forEach(function(tool){
+    tool.draw()
+  })
+}
+
+WrokMap.prototype.addTools = function(tools) {
+  var me = this
+
+  tools.forEach(function(tool){
+    me.tools.push(tool)
+    tool.setMap(me)
+  })
+}
+
 WrokMap.prototype._handleEvent = function (e) {
   
 }

@@ -1,5 +1,5 @@
 
-var url = './asset/dunk.jpg'
+var url = '../asset/dunk.jpg'
 
 var workMap = new WrokMap({
   mapId: 'workMap',
@@ -7,4 +7,8 @@ var workMap = new WrokMap({
 })
 
 var image = new Image(url)
-image.setMap(workMap)
+var paint = new Paint()
+
+workMap.addTools([image, paint])
+
+workMap.refresh()
