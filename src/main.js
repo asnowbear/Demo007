@@ -8,7 +8,8 @@ var workMap = new WrokMap({
 
 var image = new MyImage(url)
 var paint = new Paint()
+var nav = new Nav()
 
-workMap.addTools([image, paint])
+workMap.addTools([image, paint, nav])
 
 workMap.refresh()

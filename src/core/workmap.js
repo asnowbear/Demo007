@@ -11,11 +11,15 @@ function WrokMap (config) {
   
   this._addEventsToMap()
   
+  this.level = 1
+  
 }
 
 WrokMap.prototype.refresh = function() {
   this.tools.forEach(function(tool){
-    tool.draw()
+    if (tool.draw) {
+      tool.draw()
+    }
   })
 }
 
@@ -31,14 +35,16 @@ WrokMap.prototype.addTools = function(tools) {
 WrokMap.prototype._handleEvent = function (e) {
   var event = this._coordinateMapping(e)
 
-  tools.forEach(function(tool){
-    tool._handleEvent()
+  this.tools.forEach(function(tool){
+    if (tool.handleEvent) {
+      tool.handleEvent(event)
+    }
   })
 }
 
 WrokMap.prototype._addEventsToMap = function () {
   var mapDom = this.mapDom
-  var handleEventFn = this._handleEvent
+  var handleEventFn = this._handleEvent.bind(this)
   
   for (var key in EventTag) {
     mapDom.addEventListener(EventTag[key], handleEventFn)
@@ -50,8 +56,8 @@ WrokMap.prototype._coordinateMapping = function (origE) {
   var newE = {
     oldEvent: origE,
     type: origE.type,
-    mapX:
-    mapY:
+    mapX: 0,
+    mapY: 0
   }
 
   return newE
