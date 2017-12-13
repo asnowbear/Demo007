@@ -51,7 +51,7 @@ MyImage.prototype.draw = function () {
   }
   
   var rate = 1
-  var imageFromX = center[0] - imageWidth / 2
+  var imageFromX = center[0] - imageWidth / 2,
       imageFromY = center[1] - imageHeight / 2
   var dw = image.width * rate
   var dh = image.height * rate
