@@ -19,7 +19,7 @@ Nav.prototype.handleEvent = function (evt) {
     case EventTag.mouseMove:
       this.handleMouseMove(evt)
       break
-    case EventTag.handleMouseUp:
+    case EventTag.mouseUp:
       this.handleMouseUp(evt)
       break
     case EventTag.mouseWheel:
@@ -36,7 +36,7 @@ Nav.prototype.handleMouseWheel = function(evt) {
   var wheelEvent = evt.oldEvent
   wheelEvent.preventDefault()
   
-  this._anchor = [evt.mapX, evt.mapY]
+  var anchor = [evt.mapX, evt.mapY]
   
   var map = this.map
   
@@ -50,25 +50,35 @@ Nav.prototype.handleMouseWheel = function(evt) {
   if (delta === 0) {
     return
   }
-  
+
+  var currentFactor = map.zoomFactor
+  var currentCenter = map.center
+  var newFactor
+
   // 放大为正
   if (delta > 0) {
     map.level ++
-    map.zoomFactor = map.zoomFactor + map.zoomFactor
+    newFactor = map.zoomFactor + map.zoomFactor
   }
   // 缩小为负
   else {
     map.level --
-    map.zoomFactor = map.zoomFactor / map.zoomFactor
+    newFactor = map.zoomFactor - map.zoomFactor
   }
-  
-  
+
+
+  var x = anchor[0] - newFactor * (anchor[0] - currentCenter[0]) / currentFactor
+  var y = anchor[1] - newFactor * (anchor[1] - currentCenter[1]) / currentFactor
+
+  map.center = [x, y]
+  map.zoomFactor = newFactor
+  map.refresh()
+
   this._factor += delta
-  console.log(delta)
-  
+
   
   this._factor = 0
-  this._anchor = null
+  // this._anchor = null
 }
 
 Nav.prototype.handleMouseDown = function(evt) {
