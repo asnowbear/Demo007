@@ -12,6 +12,8 @@ var EventTag = {
   
   mouseWheel: 'mousewheel',
   
+  wheel: 'wheel',
+  
   mouseOut: 'mouseout',
   
   mouseOver: 'mouseover'

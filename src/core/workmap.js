@@ -3,10 +3,15 @@
 function WrokMap (config) {
   var hostDom = config.mapId
   var canvasId = config.canvasId
+  this.zoomFactor = config.zoomFactor || 0.25
   this.mapDom = document.getElementById(hostDom)
   this.canvasDom = document.getElementById(canvasId)
+  this.canvasWidth = this.canvasDom.width
+  this.canvasHeight = this.canvasDom.height
   this.context = this.canvasDom.getContext('2d')
   this.tools = []
+  this.center = null
+  this.level = null
   this.datasource = []
   
   this._addEventsToMap()
@@ -16,6 +21,9 @@ function WrokMap (config) {
 }
 
 WrokMap.prototype.refresh = function() {
+  var context = this.context
+  context.clearRect(0, 0, this.canvasWidth, this.canvasHeight)
+  
   this.tools.forEach(function(tool){
     if (tool.draw) {
       tool.draw()
@@ -53,13 +61,20 @@ WrokMap.prototype._addEventsToMap = function () {
 
 
 WrokMap.prototype._coordinateMapping = function (origE) {
+  var mapDom = this.mapDom
+  var position = mapDom.getBoundingClientRect()
+  const eventPosition = origE
+  var srcreePosition =  [
+    eventPosition.clientX - position.left,
+    eventPosition.clientY - position.top
+  ]
+  
   var newE = {
     oldEvent: origE,
     type: origE.type,
-    mapX: 0,
-    mapY: 0
+    mapX: srcreePosition[0],
+    mapY: srcreePosition[1]
   }
 
   return newE
-
 }

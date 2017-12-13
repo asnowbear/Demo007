@@ -4,6 +4,8 @@ function MyImage (url) {
   
   this._map = null
   this.context = null
+  this.imageWidth = 0
+  this.imageHeight = 0
 
 
   var img = new Image()
@@ -13,6 +15,9 @@ function MyImage (url) {
 
   img.onload = (function () {
     this.loaded = true
+    this.imageHeight = img.height
+    this.imageWidth = img.width
+  
     this.draw()
   }).bind(this)
 
@@ -25,24 +30,33 @@ MyImage.prototype.setMap = function (map) {
 }
 
 
-MyImage.prototype.draw = function (config) {
+MyImage.prototype.draw = function () {
 
   if (!this.loaded) {
     return
   }
   
-  var image = this.image
   var context = this.context
+  // 处理
+  var image = this.image
+  var imageWidth = this.imageWidth
+  var imageHeight = this.imageHeight
   
-  context.width = context.width
-
+  var map = this._map
+  var center = map.center
+  
+  if (center === null) {
+    center = [this.imageWidth / 2, this.imageHeight / 2]
+    map.center = center
+  }
+  
   var rate = 1
-  var dx = 0 //|| imageTransform[4]
-  var dy = 0 //|| imageTransform[5]
-  var dw = image.width * rate // * imageTransform[0]
-  var dh = image.height * rate // * imageTransform[3]
+  var imageFromX = center[0] - imageWidth / 2
+      imageFromY = center[1] - imageHeight / 2
+  var dw = image.width * rate
+  var dh = image.height * rate
 
-  context.drawImage(image, 0, 0, image.width, image.height, dx, dy, dw, dh)
+  context.drawImage(image, 0, 0, image.width, image.height, imageFromX, imageFromY, dw, dh)
   
-  console.log('context.drawImage的参数：' +'0, 0, ' + image.width + ',' + image.height + ',' + dx + ',' + dy + ',' + dw + ',' + dh)
+  // console.log('context.drawImage的参数：' +'0, 0, ' + image.width + ',' + image.height + ',' + dx + ',' + dy + ',' + dw + ',' + dh)
 }
