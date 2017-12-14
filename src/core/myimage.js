@@ -43,20 +43,22 @@ MyImage.prototype.draw = function () {
   var imageHeight = this.imageHeight
   
   var map = this._map
-  var center = map.center
+  var center = map.center,
+      factor = map.getLevel(map.level)
   
   if (center === null) {
     center = [this.imageWidth / 2, this.imageHeight / 2]
     map.center = center
   }
   
-  var rate = 1
-  var imageFromX = center[0] - imageWidth / 2,
-      imageFromY = center[1] - imageHeight / 2
-  var dw = image.width * rate
-  var dh = image.height * rate
-
-  context.drawImage(image, 0, 0, image.width, image.height, imageFromX, imageFromY, dw, dh)
+  var dw = image.width * factor
+  var dh = image.height * factor
   
-  // console.log('context.drawImage的参数：' +'0, 0, ' + image.width + ',' + image.height + ',' + dx + ',' + dy + ',' + dw + ',' + dh)
+  var dx = center[0] - dw / 2,
+      dy = center[1] - dh / 2
+  
+
+  context.drawImage(image, 0, 0, image.width, image.height, dx, dy, dw, dh)
+  
+  console.log('context.drawImage的参数：' +'0, 0, ' + image.width + ',' + image.height + ',' + dx + ',' + dy + ',' + dw + ',' + dh)
 }

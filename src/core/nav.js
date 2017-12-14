@@ -1,7 +1,6 @@
 
 function Nav () {
   
-  this.level = 1
   this._factor = 0
   this._anchor = null
   
@@ -51,34 +50,29 @@ Nav.prototype.handleMouseWheel = function(evt) {
     return
   }
 
-  var currentFactor = map.zoomFactor
+  var currentLev = map.getLevel(map.level)
   var currentCenter = map.center
-  var newFactor
+  var newLev
 
   // 放大为正
   if (delta > 0) {
-    map.level ++
-    newFactor = map.zoomFactor + map.zoomFactor
+    map.setLevel(-1)
   }
   // 缩小为负
   else {
-    map.level --
-    newFactor = map.zoomFactor - map.zoomFactor
+    map.setLevel(1)
   }
+  
+  newLev = map.getLevel(map.level)
 
-
-  var x = anchor[0] - newFactor * (anchor[0] - currentCenter[0]) / currentFactor
-  var y = anchor[1] - newFactor * (anchor[1] - currentCenter[1]) / currentFactor
-
+  var x = anchor[0] - newLev * (anchor[0] - currentCenter[0]) / currentLev
+  var y = anchor[1] - newLev * (anchor[1] - currentCenter[1]) / currentLev
+  
   map.center = [x, y]
-  map.zoomFactor = newFactor
   map.refresh()
 
   this._factor += delta
-
-  
   this._factor = 0
-  // this._anchor = null
 }
 
 Nav.prototype.handleMouseDown = function(evt) {

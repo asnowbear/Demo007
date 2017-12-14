@@ -3,7 +3,9 @@
 function WrokMap (config) {
   var hostDom = config.mapId
   var canvasId = config.canvasId
-  this.zoomFactor = config.zoomFactor || 0.25
+  // this.zoomFactor = config.zoomFactor || 0.25
+  this.levels = config.levels || [ 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3]
+  this.level = config.level || 1
   this.mapDom = document.getElementById(hostDom)
   this.canvasDom = document.getElementById(canvasId)
   this.canvasWidth = this.canvasDom.width
@@ -11,13 +13,36 @@ function WrokMap (config) {
   this.context = this.canvasDom.getContext('2d')
   this.tools = []
   this.center = null
-  this.level = null
   this.datasource = []
-  
   this._addEventsToMap()
   
-  this.level = 1
+}
+
+WrokMap.prototype.setLevel = function (step) {
+  var len = this.levels.length
+  var level = this.level
+  level = level + step
   
+  if (level < 0) {
+    level = 0
+  } else if (level > len - 1) {
+    level = len - 1
+  }
+  
+  this.level = level
+}
+
+
+WrokMap.prototype.getLevel = function (level) {
+  // var len = this.levels.length
+  //
+  // if (level < 0) {
+  //   level = 0
+  // } else if (level > len - 1) {
+  //   level = len - 1
+  // }
+  
+  return this.levels[level]
 }
 
 WrokMap.prototype.refresh = function() {
