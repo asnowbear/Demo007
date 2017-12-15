@@ -6,8 +6,18 @@ var workMap = new WrokMap({
   canvasId: 'can'
 })
 
+var dataCollection = {
+  name: 'dataCollection',
+  geos : []
+}
+
+workMap.datasource.push(dataCollection)
+
 var image = new MyImage(url)
-var paint = new Paint()
+var paint = new Paint({
+  dataCollection: dataCollection
+})
+
 var nav = new Nav()
 
 workMap.addTools([image, paint, nav])

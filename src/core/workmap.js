@@ -34,14 +34,6 @@ WrokMap.prototype.setLevel = function (step) {
 
 
 WrokMap.prototype.getLevel = function (level) {
-  // var len = this.levels.length
-  //
-  // if (level < 0) {
-  //   level = 0
-  // } else if (level > len - 1) {
-  //   level = len - 1
-  // }
-  
   return this.levels[level]
 }
 

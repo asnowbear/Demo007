@@ -5,6 +5,8 @@ function MyPolygon () {
   this.feature = {}
   this.tag = ''
   
+  this.fillStyle = null
+  
   
 }
 
@@ -15,36 +17,23 @@ MyPolygon.prototype.setPosition = function (values) {
 
 MyPolygon.prototype.draw = function (context) {
   var coords = this.coords
-  ctx.save()
-
-  ctx.beginPath()
-
-  // const coordinates = renderOpt.coordinates
-  ctx.moveTo(coordinates[0][0],coordinates[0][1])
-
-  for (var k = 0, kk = coords.length ; k < kk ; k ++){
-    let cd = coordinates[k]
-    ctx.lineTo(cd[0],cd[1])
+  var config = Config.style
+  context.save()
+  context.beginPath()
+  
+  context.moveTo(coords[0],coords[1])
+  for (var i = 0, len = coords.length ; i < len ; i ++){
+    var pts = coords[i]
+    context.lineTo(pts[0],pts[1])
   }
 
-  if (renderOpt.fillStyle) {
-    ctx.fillStyle = renderOpt.fillStyle
-    ctx.fill()
-  }
+  context.fillStyle = config.fillStyle
+  context.fill()
+  context.closePath()
 
-  ctx.closePath()
-
-  const borderStyle = renderOpt.borderStyle
-  if (borderStyle) {
-    ctx.strokeStyle = colorToString(borderStyle.color,borderStyle.alpha)
-    ctx.lineWidth = borderStyle.width
-
-    if (borderStyle.lineDash) {
-      ctx.setLineDash(borderStyle.lineDash)
-    }
-
-    ctx.stroke()
-  }
-
-  ctx.restore()
+  context.strokeStyle = config.strokeStyle.color
+  context.lineWidth = config.strokeStyle.width
+  context.stroke()
+  
+  context.restore()
 }
