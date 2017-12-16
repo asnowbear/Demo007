@@ -3,8 +3,7 @@
 function WrokMap (config) {
   var hostDom = config.mapId
   var canvasId = config.canvasId
-  // this.zoomFactor = config.zoomFactor || 0.25
-  this.levels = config.levels || [ 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3]
+  this.levels = config.levels || [ 2, 1, 0.5, 0.25, 0.125, 0.0625]
   this.level = config.level || 1
   this.mapDom = document.getElementById(hostDom)
   this.canvasDom = document.getElementById(canvasId)
@@ -58,6 +57,8 @@ WrokMap.prototype.refresh = function() {
   var context = this.context
   context.clearRect(0, 0, this.canvasWidth, this.canvasHeight)
   
+  this._updateMatrix()
+  
   this.tools.forEach(function(tool){
     if (tool.draw) {
       tool.draw()
@@ -94,7 +95,10 @@ WrokMap.prototype._addEventsToMap = function () {
 }
 
 WrokMap.prototype._updateMatrix = function () {
-
+  if (!this.center) {
+    return
+  }
+  
   var center = this.center,
       lev = this.getLevel(this.level),
       size = this.size
@@ -118,8 +122,34 @@ WrokMap.prototype._updateMatrix = function () {
   matrix[3] = sy * cos
   matrix[4] = dx2 * sx * cos - dy2 * sx * sin + dx1
   matrix[5] = dx2 * sy * sin + dy2 * sy * cos + dy1
+  
+  var matrix2 = [0, 0, 0, 0, 0, 0]
+  matrix2[0] = matrix[0]
+  matrix2[1] = matrix[1]
+  matrix2[2] = matrix[2]
+  matrix2[3] = matrix[3]
+  matrix2[4] = matrix[4]
+  matrix2[5] = matrix[5]
+  
+  var det = matrix2[0] * matrix2[3] - matrix2[1] * matrix2[2]
+  var a = matrix2[0]
+  var b = matrix2[1]
+  var c = matrix2[2]
+  var d = matrix2[3]
+  var e = matrix2[4]
+  var f = matrix2[5]
+  
+  matrix2[0] = d / det
+  matrix2[1] = -b / det
+  matrix2[2] = -c / det
+  matrix2[3] = a / det
+  matrix2[4] = (c * f - d * e) / det
+  matrix2[5] = -(a * f - b * e) / det
 
-  this.martrix = matrix
+  this.matrix = {
+    pixel: matrix,
+    coordinate: matrix2
+  }
 }
 
 
@@ -135,13 +165,14 @@ WrokMap.prototype._coordinateMapping = function (origE) {
   var x = srcreePosition[0]
   var y = srcreePosition[1]
   
+  
+  var mt = this.matrix.coordinate
+  
   var newE = {
     oldEvent: origE,
     type: origE.type,
-    // mapX: transform[0] * x + transform[2] * y + transform[4],
-    // mapY: transform[1] * x + transform[3] * y + transform[5]
-    mapX: x,
-    mapY: y
+    mapX: mt[0] * x + mt[2] * y + mt[4],
+    mapY: mt[1] * x + mt[3] * y + mt[5]
   }
 
   return newE

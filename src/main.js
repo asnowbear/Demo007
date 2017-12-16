@@ -19,7 +19,6 @@ var paint = new Paint({
 })
 
 var nav = new Nav()
+nav.active = true
 
 workMap.addTools([image, paint, nav])
-
-workMap.refresh()

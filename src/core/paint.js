@@ -10,6 +10,7 @@ function Paint (config) {
   this._tempPositions = null
   // this._tempLinePositions = null
   this._killCoordinate = null
+  this.active = true
   
   this._tempDatasource = {
     name: 'tempCollection',
@@ -19,6 +20,10 @@ function Paint (config) {
 }
 
 Paint.prototype.handleEvent = function (evt) {
+  if (!this.active) {
+    return
+  }
+  
   var type = evt.type
   switch (type) {
     case EventTag.mouseDown:
@@ -180,7 +185,7 @@ Paint.prototype.draw = function() {
 
   datasource.forEach(function(collection){
     collection.geos.forEach(function(geo){
-      geo.draw(map.context)
+      geo.draw(map.context, map)
     })
   })
 }

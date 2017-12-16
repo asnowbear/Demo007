@@ -5,11 +5,17 @@ function Nav () {
   this._anchor = null
   
   this.map = null
-  this._mouseDownPoint = null
+  this._lastPt = null
+  
+  this.active = true
   
 }
 
 Nav.prototype.handleEvent = function (evt) {
+  if (!this.active) {
+    return
+  }
+  
   var type = evt.type
   switch (type) {
     case EventTag.mouseDown:
@@ -76,32 +82,43 @@ Nav.prototype.handleMouseWheel = function(evt) {
 }
 
 Nav.prototype.handleMouseDown = function(evt) {
-  this._mouseDownPoint = [evt.mapX, evt.mapY]
-  
+  // this._mouseDownPoint = [evt.oldEvent.clientX, evt.oldEvent.clientX]
+  this.beginNav = true
   
 }
 
 Nav.prototype.handleMouseMove = function(evt) {
-  if (!this._mouseDownPoint) {
+  if (!this.beginNav) {
     return
   }
   
-  var mouseMovePoint = [evt.mapX, evt.mapY]
-  var lastMouseDownPoint = this._mouseDownPoint
-  var map = this.map
-  var center = map.center
+  var movePt = [evt.oldEvent.clientX, evt.oldEvent.clientY]
   
-  var dx = mouseMovePoint[0] - lastMouseDownPoint[0],
-      dy = mouseMovePoint[1] - lastMouseDownPoint[1]
+  if (this._lastPt) {
+    var map = this.map,
+      lev = map.getLevel(map.level),
+      center = map.center
   
-  map.center = [center[0] +　dx, center[1] + dy]
-  map.refresh()
+    var dx = this._lastPt[0] - movePt[0],
+        dy = this._lastPt[1] - movePt[1]
   
-  this._mouseDownPoint = mouseMovePoint
+    var tempCenter = [dx, dy]
+    tempCenter[0] *= lev
+    tempCenter[1] *= lev
+  
+    tempCenter[0] += center[0]
+    tempCenter[1] += center[1]
+  
+    map.center = tempCenter
+    map.refresh()
+  }
+  
+  this._lastPt = movePt
 }
 
 Nav.prototype.handleMouseUp = function(evt) {
-  this._mouseDownPoint = null
+  this.beginNav = false
+  this._lastPt = null
 }
 
 
