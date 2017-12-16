@@ -165,7 +165,6 @@ WrokMap.prototype._coordinateMapping = function (origE) {
   var x = srcreePosition[0]
   var y = srcreePosition[1]
   
-  
   var mt = this.matrix.coordinate
   
   var newE = {

@@ -95,21 +95,35 @@ Paint.prototype._shouldStopDrawing = function(evt) {
     var potentiallyDone = this._tempPositions.length > 2
     var potentiallyFinishCoordinates = [this._tempPositions[0], this._tempPositions[this._tempPositions.length - 2]]
     
+    var t1 = this.map.matrix.pixel
+    
+    var changeToPiexel = function (T, point) {
+      var x = point[0]
+      var y = point[1]
+      point[0] = T[0] * x + T[2] * y + T[4]
+      point[1] = T[1] * x + T[3] * y + T[5]
+      return point
+    }
+    
+    var vp = this.map.mapDom.getBoundingClientRect()
+    var vpPt = [
+      evt.oldEvent.clientX - vp.left,
+      evt.oldEvent.clientY - vp.top
+    ]
+    
     if (potentiallyDone) {
       // var map = this.map
       for (var  i = 0, ii = potentiallyFinishCoordinates.length; i < ii; i++) {
         var lastPt = potentiallyFinishCoordinates[i]
+        var finishPixel = changeToPiexel(t1, lastPt.slice(0, 2))
         
-        // const finishPixel = map.getPixelFromCoordinate(finishCoordinate)
-        
-        const pixel = [evt.mapX, evt.mapY]
-        const dx = pixel[0] - lastPt[0]
-        const dy = pixel[1] - lastPt[1]
-        const snapTolerance = 20
+        var dx = vpPt[0] - finishPixel[0]
+        var dy = vpPt[1] - finishPixel[1]
+        var snapTolerance = 8
         stop = Math.sqrt(dx * dx + dy * dy) <= snapTolerance
         
         if (stop) {
-          this._killCoordinate = lastPt
+          this._killCoordinate = finishPixel
           break
         }
       }
