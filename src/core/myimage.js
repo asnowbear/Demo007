@@ -1,14 +1,13 @@
-
-
+/**
+ *
+ * @param url
+ * @constructor
+ */
 function MyImage (url) {
-  
   this._map = null
   this.context = null
   this.imageWidth = 0
   this.imageHeight = 0
-
-
-  
 }
 
 MyImage.prototype.setMap = function (map) {
@@ -80,5 +79,4 @@ MyImage.prototype.draw = function () {
       dh = imageHeight * T[3]
   
   context.drawImage(image, 0, 0, imageWidth, imageHeight, dx, dy, dw, dh)
-  
 }

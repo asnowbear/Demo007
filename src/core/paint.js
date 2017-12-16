@@ -1,5 +1,8 @@
-
-
+/**
+ *
+ * @param config
+ * @constructor
+ */
 function Paint (config) {
   config = config ? config : {}
   this.map = null
@@ -8,7 +11,6 @@ function Paint (config) {
   this.dataCollection = config.dataCollection
   this._tempPolygon = null
   this._tempPositions = null
-  // this._tempLinePositions = null
   this._killCoordinate = null
   this.active = true
   
@@ -112,7 +114,6 @@ Paint.prototype._shouldStopDrawing = function(evt) {
     ]
     
     if (potentiallyDone) {
-      // var map = this.map
       for (var  i = 0, ii = potentiallyFinishCoordinates.length; i < ii; i++) {
         var lastPt = potentiallyFinishCoordinates[i]
         var finishPixel = changeToPiexel(t1, lastPt.slice(0, 2))

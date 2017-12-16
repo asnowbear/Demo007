@@ -1,14 +1,11 @@
-
+/**
+ *
+ * @constructor
+ */
 function Nav () {
-  
-  this._factor = 0
-  this._anchor = null
-  
   this.map = null
   this._lastPt = null
-  
   this.active = true
-  
 }
 
 Nav.prototype.handleEvent = function (evt) {
@@ -76,13 +73,9 @@ Nav.prototype.handleMouseWheel = function(evt) {
   
   map.center = [x, y]
   map.refresh()
-
-  this._factor += delta
-  this._factor = 0
 }
 
 Nav.prototype.handleMouseDown = function(evt) {
-  // this._mouseDownPoint = [evt.oldEvent.clientX, evt.oldEvent.clientX]
   this.beginNav = true
   
 }

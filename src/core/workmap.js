@@ -1,5 +1,8 @@
-
-
+/**
+ *
+ * @param config
+ * @constructor
+ */
 function WrokMap (config) {
   var hostDom = config.mapId
   var canvasId = config.canvasId

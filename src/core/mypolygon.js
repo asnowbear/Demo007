@@ -1,9 +1,10 @@
-
-
+/**
+ *
+ * @constructor
+ */
 function MyPolygon () {
   this.coords = []
   this.feature = {}
-  this.tag = ''
   
   this.fillStyle = null
   
