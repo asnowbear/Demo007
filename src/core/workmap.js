@@ -81,11 +81,19 @@ WrokMap.prototype.addTools = function(tools) {
 WrokMap.prototype._handleEvent = function (e) {
   var event = this._coordinateMapping(e)
 
-  this.tools.forEach(function(tool){
-    if (tool.handleEvent) {
-      tool.handleEvent(event)
+  var ts = this.tools,
+      len = ts.length;
+  
+  for(var i = 0; i < len ;i ++) {
+    var t = ts[i]
+    
+    if (t.handleEvent) {
+      var coninues = t.handleEvent(event)
+      if (!coninues) {
+        break
+      }
     }
-  })
+  }
 }
 
 WrokMap.prototype._addEventsToMap = function () {

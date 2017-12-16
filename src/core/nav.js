@@ -6,6 +6,8 @@ function Nav () {
   this.map = null
   this._lastPt = null
   this.active = true
+  this.beginNav = false
+  this.onNaving = false
 }
 
 Nav.prototype.handleEvent = function (evt) {
@@ -13,6 +15,7 @@ Nav.prototype.handleEvent = function (evt) {
     return
   }
   
+  var ok = true
   var type = evt.type
   switch (type) {
     case EventTag.mouseDown:
@@ -22,7 +25,7 @@ Nav.prototype.handleEvent = function (evt) {
       this.handleMouseMove(evt)
       break
     case EventTag.mouseUp:
-      this.handleMouseUp(evt)
+      ok = this.handleMouseUp(evt)
       break
     case EventTag.mouseWheel:
     case EventTag.wheel:
@@ -30,6 +33,7 @@ Nav.prototype.handleEvent = function (evt) {
       break
   }
   
+  return ok
 }
 
 
@@ -82,7 +86,7 @@ Nav.prototype.handleMouseDown = function(evt) {
 
 Nav.prototype.handleMouseMove = function(evt) {
   if (!this.beginNav) {
-    return
+    return false
   }
   
   var movePt = [evt.oldEvent.clientX, evt.oldEvent.clientY]
@@ -106,12 +110,22 @@ Nav.prototype.handleMouseMove = function(evt) {
     map.refresh()
   }
   
+  this.onNaving = true
   this._lastPt = movePt
+  
+  return true
 }
 
 Nav.prototype.handleMouseUp = function(evt) {
   this.beginNav = false
   this._lastPt = null
+  
+  if (this.onNaving) {
+    this.onNaving = false
+    return false
+  }
+  
+  return true
 }
 
 

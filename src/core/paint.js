@@ -19,6 +19,23 @@ function Paint (config) {
     geos: []
   }
   
+  window.onkeyup = function (evt) {
+    var keyCode = evt.keyCode
+    if (keyCode === 27) {
+      this._returnPrestepPainting()
+    }
+  }
+  
+}
+
+Paint.prototype._returnPrestepPainting = function () {
+  if (this._killCoordinate) {
+    var len = this._tempPositions.length
+    
+    
+    
+    
+  }
 }
 
 Paint.prototype.handleEvent = function (evt) {
@@ -39,6 +56,7 @@ Paint.prototype.handleEvent = function (evt) {
       break
   }
   
+  return true
 }
 
 Paint.prototype.handleMouseDown = function (evt) {
