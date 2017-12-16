@@ -114,10 +114,23 @@ Paint.prototype._shouldStopDrawing = function(evt) {
   return stop
 }
 
+Paint.prototype._clearTempDatasource = function () {
+  var dataSouce = this.map.datasource
+
+  for(var i = 0, len = dataSouce.length ;i < len ;i ++) {
+    var d = dataSouce[i]
+    if (d.name === 'tempCollection') {
+      d.geos = []
+      break
+    }
+  }
+}
+
 Paint.prototype._stopDrawing = function() {
   this._killCoordinate = null
-  this._tempDatasource = []
-  
+  this._tempDatasource.geos = []
+  this._clearTempDatasource()
+
   var tempPositions = this._tempPositions
   tempPositions.pop()
   tempPositions.push(tempPositions[0])
@@ -144,6 +157,7 @@ Paint.prototype._doDrawing = function(evt) {
   this._killCoordinate = pt
 
   this._tempPositions = [pt.slice(), pt.slice()]
+  this._tempPolygon = null
 
   var polygon = new MyPolygon()
   polygon.tag = 'temp'

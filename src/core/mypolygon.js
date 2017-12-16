@@ -7,7 +7,7 @@ function MyPolygon () {
   
   this.fillStyle = null
   
-  
+  this.id = uuid()
 }
 
 

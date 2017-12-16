@@ -60,5 +60,5 @@ MyImage.prototype.draw = function () {
 
   context.drawImage(image, 0, 0, image.width, image.height, dx, dy, dw, dh)
   
-  console.log('context.drawImage的参数：' +'0, 0, ' + image.width + ',' + image.height + ',' + dx + ',' + dy + ',' + dw + ',' + dh)
+  // console.log('context.drawImage的参数：' +'0, 0, ' + image.width + ',' + image.height + ',' + dx + ',' + dy + ',' + dw + ',' + dh)
 }

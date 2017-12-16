@@ -1,5 +1,5 @@
 
-var url = 'asset/1.png'
+var url = 'asset/dunk.jpg'
 
 var workMap = new WrokMap({
   mapId: 'workMap',
