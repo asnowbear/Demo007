@@ -19,22 +19,28 @@ function Paint (config) {
     geos: []
   }
   
-  window.onkeyup = function (evt) {
+  window.onkeyup = (function (evt) {
     var keyCode = evt.keyCode
     if (keyCode === 27) {
       this._returnPrestepPainting()
     }
-  }
+  }).bind(this)
   
 }
 
 Paint.prototype._returnPrestepPainting = function () {
   if (this._killCoordinate) {
     var len = this._tempPositions.length
+    // if (len > 1) {
+    this._tempPositions.splice(len - 2, 1)
+    this.map.refresh()
     
-    
-    
-    
+    if (this._tempPositions.length === 1) {
+      this.flush()
+    }
+    // } else {
+    //   this._stopDrawing()
+    // }
   }
 }
 
@@ -164,10 +170,14 @@ Paint.prototype._clearTempDatasource = function () {
   }
 }
 
-Paint.prototype._stopDrawing = function() {
+Paint.prototype.flush = function () {
   this._killCoordinate = null
   this._tempDatasource.geos = []
   this._clearTempDatasource()
+}
+
+Paint.prototype._stopDrawing = function() {
+  this.flush()
 
   var tempPositions = this._tempPositions
   tempPositions.pop()
