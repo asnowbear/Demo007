@@ -1,8 +1,4 @@
 /**
- * Created by zhangyong on 2017/12/15.
- */
-
-/**
  *
  * @type {{}}
  */
