@@ -3,19 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+
 </head>
+
+<style>
+    .button {
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        cursor: pointer;
+        font-size: 18px;
+        display: inline-block;
+        text-align: center;
+        text-decoration: none;
+        padding: 12px 32px;
+        margin: 4px 2px;
+    }
+
+</style>
 <body>
 
-<!--<div style="float: left">-->
-    <!--<button id="panBtn"> 拖动</button>-->
-    <!--<button id="draw"> 绘制</button>-->
-<!--</div>-->
+<div style="">
+    <button id="drawBtn" class="button"> 绘制</button>
+    <button id="saveBtn" class="button"> 保存</button>
+</div>
 
 <div id="workMap" style="width:1500px;height:900px;">
     <canvas id="can" width="1500px" height="900px"></canvas>
 </div>
 </body>
 
+<script src="src/lib/jquery.min.js"></script>
 <script src="src/core/Config.js"></script>
 <script src="src/core/event.js"></script>
 <script src="src/core/myimage.js"></script>
@@ -23,6 +41,8 @@
 <script src="src/core/nav.js"></script>
 <script src="src/core/paint.js"></script>
 <script src="src/core/workmap.js"></script>
+<script src="src/core/data.js"></script>
 <script src="src/main.js"></script>
+<script src="src/common.js"></script>
 
 </html>

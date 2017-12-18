@@ -22,3 +22,6 @@ var nav = new Nav()
 nav.active = true
 
 workMap.addTools([nav, image, paint])
+
+// 用于数据序列化和反序列化
+var data = new Data()

@@ -16,6 +16,10 @@ MyPolygon.prototype.setPosition = function (values) {
   this.coords = values
 }
 
+MyPolygon.prototype.getPosition = function () {
+  return this.coords
+}
+
 MyPolygon.prototype.invertMartrix = function (c, offset, end, stride, T, opt_dest) {
   var dest = opt_dest ? opt_dest : []
   var i = 0, j
