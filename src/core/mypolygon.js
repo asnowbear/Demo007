@@ -9,6 +9,7 @@ function MyPolygon () {
   this.fillStyle = null
   
   this.id = uuid()
+  this.displayText = '01-test'
 }
 
 
@@ -18,6 +19,27 @@ MyPolygon.prototype.setPosition = function (values) {
 
 MyPolygon.prototype.getPosition = function () {
   return this.coords
+}
+
+MyPolygon.prototype.getEnvelop = function () {
+  var coords = this.getPosition()
+  if (coords.length === 0 ) {
+    return null
+  }
+  
+  var x0 = Number.POSITIVE_INFINITY
+      y0 = Number.POSITIVE_INFINITY
+      x1 = Number.NEGATIVE_INFINITY
+      y1 = Number.NEGATIVE_INFINITY
+  
+  coords.forEach(function(point){
+    x0 = Math.min(x0, point[0])
+    y0 = Math.min(y0, point[1])
+    x1 = Math.max(x1, point[0])
+    y1 = Math.max(y1, point[1])
+  })
+  
+  return [x0, y0, x1, y1]
 }
 
 MyPolygon.prototype.invertMartrix = function (c, offset, end, stride, T, opt_dest) {
@@ -38,10 +60,41 @@ MyPolygon.prototype.invertMartrix = function (c, offset, end, stride, T, opt_des
   return dest
 }
 
+MyPolygon.prototype.drawText = function (context, map) {
+  var envelop = this.getEnvelop()
+  var text = this.displayText
+  if (text === '' || text === null) {
+    return
+  }
+  
+  context.save()
+  context.strokeStyle = 'rgba(255,255,255,1)'
+  context.fillStyle = 'rgba(255,0,0,1)'
+  context.lineWidth = 2
+  
+  var invertMartrixFn = this.invertMartrix
+  
+  var cx = ( envelop[0] + envelop[2] ) / 2
+      cy = ( envelop[1] + envelop[3] ) / 2
+  
+  var tempPt = invertMartrixFn([cx, cy], 0, 2, 2, map.matrix.pixel)
+  
+  
+  context.strokeText(text, tempPt[0], tempPt[1])
+  context.fillText(text, tempPt[0], tempPt[1])
+  
+  context.restore()
+}
 
 MyPolygon.prototype.draw = function (context, map) {
   
   var oldCoords = this.coords
+  if (oldCoords.length === 0) {
+    return
+  }
+  
+  this.drawText(context, map)
+  
   var coords = []
   var invertMartrixFn = this.invertMartrix,
        martrix = map.matrix.pixel

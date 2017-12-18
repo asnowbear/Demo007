@@ -31,16 +31,12 @@ function Paint (config) {
 Paint.prototype._returnPrestepPainting = function () {
   if (this._killCoordinate) {
     var len = this._tempPositions.length
-    // if (len > 1) {
     this._tempPositions.splice(len - 2, 1)
     this.map.refresh()
     
     if (this._tempPositions.length === 1) {
       this.flush()
     }
-    // } else {
-    //   this._stopDrawing()
-    // }
   }
 }
 
