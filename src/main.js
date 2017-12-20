@@ -1,6 +1,8 @@
 
 var url = 'asset/1.png'
 
+resizeCanvas()
+
 var workMap = new WrokMap({
   mapId: 'workMap',
   canvasId: 'can'
@@ -25,3 +27,6 @@ workMap.addTools([nav, image, paint])
 
 // 用于数据序列化和反序列化
 var data = new Data()
+
+
+
