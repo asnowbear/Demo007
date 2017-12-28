@@ -23,8 +23,11 @@ MyImage.prototype.setMap = function (map) {
     this.loaded = true
     this.imageHeight = img.height
     this.imageWidth = img.width
+    
+    console.log(this.imageHeight + ',' + this.imageWidth)
   
     map.center = [this.imageWidth / 2, this.imageHeight / 2]
+    // map.center = [$(map.mapDom).width() / 2, $(map.mapDom).height() / 2]
     map.refresh()
     
   }).bind(this)

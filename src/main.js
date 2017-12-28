@@ -1,7 +1,13 @@
 
-var url = 'asset/1.png'
+var url = 'asset/dunk.jpg'
 
 resizeCanvas()
+
+/**
+ * 当前点击选中的图形
+ * @type {null}
+ */
+var currentSelectedGeo = null
 
 var workMap = new WrokMap({
   mapId: 'workMap',

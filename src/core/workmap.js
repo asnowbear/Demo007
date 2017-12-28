@@ -7,7 +7,7 @@ function WrokMap (config) {
   var hostDom = config.mapId
   var canvasId = config.canvasId
   this.levels = config.levels || [ 2, 1, 0.5, 0.25, 0.125, 0.0625]
-  this.level = config.level || 1
+  this.level = config.level || 0
   this.mapDom = document.getElementById(hostDom)
   this.canvasDom = document.getElementById(canvasId)
   this.canvasWidth = this.canvasDom.width
@@ -19,6 +19,15 @@ function WrokMap (config) {
   this._addEventsToMap()
 
   this._calculateSize()
+}
+
+WrokMap.prototype.adjustImage = function (imageWidth, imageHeight) {
+  
+  if (imageWidth > imageHeight) {
+    
+  } else {
+    
+  }
 }
 
 WrokMap.prototype._calculateSize = function () {
@@ -79,7 +88,7 @@ WrokMap.prototype.addTools = function(tools) {
 }
 
 WrokMap.prototype._handleEvent = function (e) {
-  var event = this._coordinateMapping(e)
+  var event = this.coordinateMapping(e)
 
   var ts = this.tools,
       len = ts.length;
@@ -164,7 +173,7 @@ WrokMap.prototype._updateMatrix = function () {
 }
 
 
-WrokMap.prototype._coordinateMapping = function (origE) {
+WrokMap.prototype.coordinateMapping = function (origE) {
   var mapDom = this.mapDom
   var position = mapDom.getBoundingClientRect()
   var eventPosition = origE
@@ -186,4 +195,80 @@ WrokMap.prototype._coordinateMapping = function (origE) {
   }
 
   return newE
+}
+
+WrokMap.prototype.flushLightedGeo = function () {
+  var geos = this.datasource[0].geos
+  geos.forEach(function(g){
+    g.light = false
+  })
+}
+
+WrokMap.prototype.findPolygonByClickPoint = function (point) {
+  var geos = this.datasource[0].geos
+  for(var i = 0, len = geos.length; i < len; i ++) {
+    var geo = geos[i]
+    
+    var contained = WrokMap.containsPointPolygon(point, geo.coords)
+    if (contained) {
+      return geo
+    }
+  }
+  
+  return null
+}
+
+WrokMap.prototype.deletePolygonById = function (id) {
+  if (id) {
+    var delIndex = -1
+    var geos = this.datasource[0].geos
+    for(var i = 0, len = geos.length; i < len; i ++) {
+      var geo = geos[i]
+    
+      if (geo.id === id) {
+        delIndex = i
+        break
+      }
+    }
+    
+    if (delIndex > -1) {
+      this.datasource[0].geos.splice(delIndex, 1)
+      return true
+    }
+    
+    return false
+  }
+  
+  return false
+}
+
+WrokMap.containsPointPolygon = function (point, polygon) {
+  var px = point[0],
+    py = point[1],
+    flag = false
+  
+  for (var i = 0, l = polygon.length, j = l - 1; i < l; j = i, i++) {
+    var sx = polygon[i][0],
+      sy = polygon[i][1],
+      tx = polygon[j][0],
+      ty = polygon[j][1]
+    
+    if ((sx === px && sy === py) || (tx === px && ty === py)) {
+      return true
+    }
+    
+    if ((sy < py && ty >= py) || (sy >= py && ty < py)) {
+      var x = sx + (py - sy) * (tx - sx) / (ty - sy);
+      
+      if (x === px) {
+        return true
+      }
+      
+      if (x > px) {
+        flag = !flag
+      }
+    }
+  }
+  
+  return flag
 }

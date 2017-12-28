@@ -5,13 +5,13 @@
 function MyPolygon () {
   this.coords = []
   this.feature = {}
+  this.light = false
   
   this.fillStyle = null
   
   this.id = uuid()
-  this.displayText = '01-test'
+  this.displayText = ''
 }
-
 
 MyPolygon.prototype.setPosition = function (values) {
   this.coords = values
@@ -86,6 +86,20 @@ MyPolygon.prototype.drawText = function (context, map) {
   context.restore()
 }
 
+MyPolygon.prototype.drawLight = function (context, styleConfig, points) {
+  if (this.light === false) {
+    return
+  }
+  
+  context.save()
+  context.fillStyle = 'rgba(255,0,0,0.6)'
+  points.forEach(function(p){
+    context.fillRect(p[0] - 7/2, p[1] - 7/2, 7, 7)
+  })
+  
+  context.restore()
+}
+
 MyPolygon.prototype.draw = function (context, map) {
   
   var oldCoords = this.coords
@@ -108,6 +122,9 @@ MyPolygon.prototype.draw = function (context, map) {
   })
   
   var config = Config.style
+  
+  this.drawLight(context, config, coords)
+  
   context.save()
   context.beginPath()
   
