@@ -6,6 +6,7 @@ function MyPolygon () {
   this.coords = []
   this.feature = {}
   this.light = false
+  this.display = true
   
   this.fillStyle = null
   
@@ -101,6 +102,9 @@ MyPolygon.prototype.drawLight = function (context, styleConfig, points) {
 }
 
 MyPolygon.prototype.draw = function (context, map) {
+  if (this.display === false) {
+    return
+  }
   
   var oldCoords = this.coords
   if (oldCoords.length === 0) {

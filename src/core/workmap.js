@@ -7,7 +7,7 @@ function WrokMap (config) {
   var hostDom = config.mapId
   var canvasId = config.canvasId
   this.levels = config.levels || [ 2, 1, 0.5, 0.25, 0.125, 0.0625]
-  this.level = config.level || 0
+  this.level = config.level || 1
   this.mapDom = document.getElementById(hostDom)
   this.canvasDom = document.getElementById(canvasId)
   this.canvasWidth = this.canvasDom.width
@@ -75,6 +75,19 @@ WrokMap.prototype.refresh = function() {
     if (tool.draw) {
       tool.draw()
     }
+  })
+  
+  this.draw()
+}
+
+WrokMap.prototype.draw = function() {
+  var datasource = this.datasource
+  var map = this
+  
+  datasource.forEach(function(collection){
+    collection.geos.forEach(function(geo){
+      geo.draw(map.context, map)
+    })
   })
 }
 

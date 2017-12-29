@@ -1,11 +1,12 @@
 
 /**
- * 保存按钮点击
+ * 点击后生成json格式数据
  */
 $('#saveBtn').click(function(e){
   var geos = dataCollection.geos
   var resultJson = data.serialize(geos)
-  console.log(resultJson)
+  var resultStr = JSON.stringify(resultJson)
+  console.log(resultStr)
 })
 
 /**
@@ -49,8 +50,8 @@ $(window).keyup(function(evt) {
 })
 
 function resizeCanvas() {
-  var width = 690 ||　$(window).get(0).innerWidth - 50,
-      height = 500　||　$(window).get(0).innerHeight - 100
+  var width = $(window).get(0).innerWidth - 50,
+      height = $(window).get(0).innerHeight - 100
   
   $("#workMap").css({"width":width + 'px',"height" : height + "px"})
   $("#can").attr("width", width)

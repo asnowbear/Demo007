@@ -4,6 +4,7 @@ var currentSelectedGeo = null,// 当前点击选中的图形
     dataCollection = null,
     paint = null,
     nav = null,
+    paintMark = null
     data = null
 
 /**
@@ -48,22 +49,20 @@ function init (url, datasource, allGeoDisplay) {
   var image = new MyImage(url)
   
   /**
-   * 绘制工具
-   * @type {Paint}
-   */
-  paint = new Paint({
-    dataCollection: dataCollection
-  })
-  paint.active = true
-  
-  /**
    * 底图放大、缩小、拖动工具
    * @type {Nav}
    */
   nav = new Nav()
   nav.active = true
   
-  workMap.addTools([nav, image, paint])
+  /**
+   * 考生绘制点工具
+   * 当前次绘制会替换上次绘制
+   * @type {PaintMark}
+   */
+  paintMark = new PaintMark(workMap)
+  
+  workMap.addTools([nav, image, paintMark])
   
   /**
    * 数据处理工具
@@ -83,6 +82,27 @@ function fillData (collection, datasource, allDisplay) {
     })
   }
 }
+
+function resizeCanvas() {
+  var width = $(window).get(0).innerWidth - 50,
+    height = $(window).get(0).innerHeight - 100
+  
+  $("#workMap").css({"width":width + 'px',"height" : height + "px"})
+  $("#can").attr("width", width)
+  $("#can").attr("height", height)
+}
+
+
+$("#nextBtn").click(function(e){
+  var mark = paintMark.mark
+  
+  var result = workMap.findPolygonByClickPoint([mark.x, mark.y])
+  if (result === null) {
+    alert("答题错误")
+  } else {
+    alert("答题正确")
+  }
+})
 
 
 
