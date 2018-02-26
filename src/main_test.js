@@ -60,7 +60,7 @@ function init (url, datasource, allGeoDisplay) {
    * 当前次绘制会替换上次绘制
    * @type {PaintMark}
    */
-  paintMark = new PaintMark(workMap)
+  paintMark = new PaintMark(onPaintMarkEnd)
   
   workMap.addTools([nav, image, paintMark])
   
@@ -69,6 +69,14 @@ function init (url, datasource, allGeoDisplay) {
    * @type {Data}
    */
   data = new Data()
+}
+
+function onPaintMarkEnd (mark) {
+  var len = dataCollection.geos.length
+  var pointMarkLen = paintMark.marks.length
+  if (pointMarkLen >= len) {
+    paintMark.active = false
+  }
 }
 
 function fillData (collection, datasource, allDisplay) {

@@ -2,9 +2,11 @@
  *
  * @constructor
  */
-function PaintMark () {
+function PaintMark (onPaintEnd) {
   this.mark = null
+  this.marks = []
   this.active = true
+  this.onPaintEndFn = onPaintEnd === undefined ? function () {} : onPaintEnd
 }
 
 PaintMark.prototype.onMousedown = function (e) {
@@ -13,33 +15,39 @@ PaintMark.prototype.onMousedown = function (e) {
   }
   
   var mapEvent = this.map.coordinateMapping(e)
-  this.mark = {
+  var mark = {
     x: mapEvent.mapX,
     y: mapEvent.mapY,
     radius: 10
   }
   
+  this.marks.push(mark)
+  this.mark = mark
+  this.onPaintEndFn(mark)
+  
   this.map.refresh()
 }
 
 PaintMark.prototype.draw = function () {
-  if (!this.active) {
-    return
-  }
-  
   if (!this.mark) {
     return
   }
   
-  var m = this.mark
-  var points = [m.x, m.y]
-  var invertMartrixFn = this.invertMartrix
-  var tempPt = invertMartrixFn(points, 0, points.length, 2, this.map.matrix.pixel)
+  if (this.marks.length === 0) {
+    return
+  }
   
   var context = this.context
+  var invertMartrixFn = this.invertMartrix
   context.save()
-  context.fillStyle = 'rgba(255,0,0,0.6)'
-  context.fillRect(tempPt[0] - m.radius/2, tempPt[1] - m.radius/ 2, m.radius, m.radius)
+  for(var i = 0, len = this.marks.length ; i < len ; i ++) {
+    var m = this.marks[i]
+    var points = [m.x, m.y]
+    var tempPt = invertMartrixFn(points, 0, points.length, 2, this.map.matrix.pixel)
+    context.fillStyle = 'rgba(255,0,0,0.6)'
+    context.fillRect(tempPt[0] - m.radius/2, tempPt[1] - m.radius/ 2, m.radius, m.radius)
+  }
+  
   context.restore()
 }
 
