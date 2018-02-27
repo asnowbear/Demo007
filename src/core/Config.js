@@ -176,51 +176,54 @@ function canvasApi(mapId, id) {
       paintMark.marks = data
       
     },// 把获取到的学生绘制数据字符串原样传过去，要显现出来;，成功返回true，否则返回false
-    isStudentPaintOk: function (stuStr, teachDataStr) {
-      
-      if (teachDataStr === '' || teachDataStr === undefined) {
+    getStudentOkPaints: function (teachPaintString) {
+      if (teachPaintString === '' || teachPaintString === undefined) {
         return false
       }
       
-      var fillData = function (collection, datasource, allDisplay) {
+      // 反序列化多边形对象集合
+      var fillData = function (collection, datasource) {
         var fs = datasource.features
         if (fs) {
           fs.forEach(function(f){
             var geo = new MyPolygon()
             geo.setPosition(f.geometry.coordinates)
-            geo.display = allDisplay
             collection.geos.push(geo)
           })
         }
       }
       
       var coll = []
-      fillData(coll, JSON.parse(teachDataStr), true)
+      fillData(coll, JSON.parse(teachPaintString))
   
+      // 计算有多少个点在指定多边形内的数量
       var findPointInPolygon  = function (poly, mks) {
         var filts = mks.filter(function(mk) {
           return WrokMap.containsPointPolygon(poly,[mk.x, mk.y] )
         })
         
-        return filts.length > 0
+        return filts
       }
       
-      var count = 0
-      var mks = paintMark.marks
+      var pyCountHasMk = 0, // 拥有点的多边形数量
+          mkCountInPy = 0 // 被多边形包含的点的数据
+      var mks = paintMark.marks,
+          mksLen = mks.length
       
+      // 遍历多边形，寻找多边形内的点
       for(var i = 0;i < coll.length ; i ++) {
         var p = coll[i]
   
-        if (findPointInPolygon(p, mks)) {
-          count ++
+        var f = findPointInPolygon(p, mks)
+        if (f.length > 0) {
+          mkCountInPy += f.length
+          pyCountHasMk ++
         }
       }
       
-      
-      
-      
-      
-      
+      // 正确个数 = 含有点的多边形个数 - 不在多边形内的点个数
+      var resultCount = pyCountHasMk - (mksLen - mkCountInPy)
+      return resultCount > 0 ? resultCount : 0
       
     },// 返回学生绘制数量与老师一样，且都在区域内true或其它false
 // 把学生、老师绘制数据放上去操作，需要允许在同一个画布中显现老师与学生绘制， 这种一般出现在查看答案时用到
