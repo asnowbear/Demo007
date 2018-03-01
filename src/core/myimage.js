@@ -23,6 +23,9 @@ MyImage.prototype.setMap = function (map) {
     this.loaded = true
     this.imageHeight = img.height
     this.imageWidth = img.width
+    
+    map.canvasHeight = this.imageHeight
+    map.canvasWidth = this.imageWidth
   
     map.center = [this.imageWidth / 2, this.imageHeight / 2]
     map.refresh()

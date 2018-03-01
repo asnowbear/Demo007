@@ -5,13 +5,25 @@
  */
 function WrokMap (config) {
   var hostDom = config.mapId
-  var canvasId = config.canvasId
   this.levels = config.levels || [ 2, 1, 0.5, 0.25, 0.125, 0.0625]
   this.level = config.level || 1
-  this.mapDom = document.getElementById(hostDom)
-  this.canvasDom = document.getElementById(canvasId)
-  this.canvasWidth = this.canvasDom.width
-  this.canvasHeight = this.canvasDom.height
+  
+  var vp = document.createElement('DIV')
+  vp.style.position = 'relative'
+  vp.style.overflow = 'hidden'
+  vp.style.width = '100%'
+  vp.style.height = '100%'
+  this.mapDom = vp
+  
+  var parentDom = document.getElementById(hostDom)
+  var can = document.createElement('CANVAS')
+  this.canvasDom = can
+  
+  this.mapDom.appendChild(this.canvasDom)
+  parentDom.appendChild(this.mapDom)
+  
+  this.canvasWidth = 0
+  this.canvasHeight = 0
   this.context = this.canvasDom.getContext('2d')
   this.tools = []
   this.center = null
@@ -67,7 +79,12 @@ WrokMap.prototype.getLevel = function (level) {
 
 WrokMap.prototype.refresh = function() {
   var context = this.context
-  context.clearRect(0, 0, this.canvasWidth, this.canvasHeight)
+  if(this.canvasHeight !== this.canvasDom.height || this.canvasWidth === this.canvasDom.width) {
+    this.canvasDom.width = this.canvasWidth
+    this.canvasDom.height = this.canvasHeight
+  } else {
+    context.clearRect(0, 0, this.canvasWidth, this.canvasHeight)
+  }
   
   this._updateMatrix()
   
