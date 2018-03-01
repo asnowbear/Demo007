@@ -9,15 +9,30 @@ function PaintMark (onPaintEnd) {
   this.onPaintEndFn = onPaintEnd === undefined ? function () {} : onPaintEnd
 }
 
-PaintMark.prototype.onMousedown = function (e) {
+PaintMark.prototype.handleEvent = function (evt) {
   if (!this.active) {
     return
   }
   
-  var mapEvent = this.map.coordinateMapping(e)
+  var ok = true
+  var type = evt.type
+  switch (type) {
+    case EventTag.mouseUp:
+      this.onMouseup(evt)
+      break
+  }
+  
+  return ok
+}
+
+PaintMark.prototype.onMouseup = function (evt) {
+  if (!this.active) {
+    return
+  }
+  
   var mark = {
-    x: mapEvent.mapX,
-    y: mapEvent.mapY,
+    x: evt.mapX,
+    y: evt.mapY,
     radius: 10
   }
   
@@ -53,14 +68,7 @@ PaintMark.prototype.draw = function () {
 
 PaintMark.prototype.setMap = function (map) {
   this.map = map
-  
   this.context = map.context
-  var container = map.mapDom
-  
-  var me = this
-  $(container).mouseup(function(e){
-    me.onMousedown(e)
-  })
 }
 
 PaintMark.prototype.invertMartrix = function (c, offset, end, stride, T, opt_dest) {

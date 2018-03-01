@@ -64,6 +64,8 @@ function init (url, datasource, allGeoDisplay) {
   
   workMap.addTools([nav, image, paintMark])
   
+  $(workMap.canvasDom).attr("title", "双击完成绘制 \n鼠标左键拖动\n")
+  
   /**
    * 数据处理工具
    * @type {Data}
@@ -72,11 +74,11 @@ function init (url, datasource, allGeoDisplay) {
 }
 
 function onPaintMarkEnd (mark) {
-  var len = dataCollection.geos.length
-  var pointMarkLen = paintMark.marks.length
-  if (pointMarkLen >= len) {
-    paintMark.active = false
-  }
+  // var len = dataCollection.geos.length
+  // var pointMarkLen = paintMark.marks.length
+  // if (pointMarkLen >= len) {
+  //   paintMark.active = false
+  // }
 }
 
 function fillData (collection, datasource, allDisplay) {
