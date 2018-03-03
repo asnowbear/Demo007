@@ -22,8 +22,7 @@ function init (url, datasource, allGeoDisplay) {
    * @type {WrokMap}
    */
   workMap = new WrokMap({
-    mapId: 'workMap',
-    // canvasId: 'can'
+    mapId: 'workMap'
   })
   
   dataCollection = {

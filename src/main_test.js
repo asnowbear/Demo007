@@ -115,4 +115,10 @@ $("#nextBtn").click(function(e){
 })
 
 
+$("#calBtn").click(function(e){
+  var c = canvasApi().getStudentOkPaints2(data1)
+  alert(c)
+})
+
+
 

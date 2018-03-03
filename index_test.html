@@ -24,6 +24,7 @@
 
 <div style="">
     <button id="nextBtn" class="button"> 下一条</button>
+    <button id="calBtn" class="button"> 判断</button>
 </div>
 
 <div id="workMap">
@@ -50,7 +51,7 @@
      * 数据需要从数据库获取
      *
      */
-    var data = '{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"polygon","coordinates":[[591,163],[441,249],[563,351],[707,323],[717,245],[691,181],[591,163]]},"properties":{}},{"type":"Feature","geometry":{"type":"polygon","coordinates":[[285,275],[177,383],[287,455],[443,371],[405,277],[367,235],[285,275]]},"properties":{}}]}'
+    var data1 = '{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"polygon","coordinates":[[249,119],[76,170],[44,297],[141,357],[235,300],[321,256],[350,193],[339,143],[249,119]]},"properties":{}},{"type":"Feature","geometry":{"type":"polygon","coordinates":[[677,156],[544,244],[629,321],[718,310],[788,233],[791,174],[767,146],[677,156]]},"properties":{}},{"type":"Feature","geometry":{"type":"polygon","coordinates":[[409,340],[287,422],[284,514],[387,552],[507,551],[570,478],[562,396],[541,350],[409,340]]},"properties":{}},{"type":"Feature","geometry":{"type":"polygon","coordinates":[[129,308],[27,376],[94,459],[191,463],[228,389],[225,343],[129,308]]},"properties":{}},{"type":"Feature","geometry":{"type":"polygon","coordinates":[[126,218],[311,183],[288,230],[217,262],[161,265],[126,218]]},"properties":{}},{"type":"Feature","geometry":{"type":"polygon","coordinates":[[437,416],[385,449],[446,507],[507,464],[505,413],[437,416]]},"properties":{}}]}'
 
     // 示例图片
     var url = 'asset/dunk.jpg'
@@ -63,7 +64,7 @@
      *  3、init (url, JSON.parse(data), false)： 携带数据源初始化，显示图片，不显示图形 （学生答题）
      *
      */
-     init (url, JSON.parse(data), true) // 注意这里最后一个参数是true，为了演示答题效果，正式环境请设置为false
+     init (url, JSON.parse(data1), true) // 注意这里最后一个参数是true，为了演示答题效果，正式环境请设置为false
 </script>
 
 </html>

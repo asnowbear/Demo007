@@ -7,6 +7,21 @@ function PaintMark (onPaintEnd) {
   this.marks = []
   this.active = true
   this.onPaintEndFn = onPaintEnd === undefined ? function () {} : onPaintEnd
+
+  var me = this
+  $(window).keyup(function(evt) {
+    var keyCode = evt.keyCode
+    if (keyCode === 46) {
+      if (me.active) {
+        if (me.marks.length > 0) {
+          me.marks.splice(me.marks.length - 1, 1)
+          me.map.refresh()
+        }
+      }
+    }
+
+    evt.preventDefault()
+  })
 }
 
 PaintMark.prototype.handleEvent = function (evt) {

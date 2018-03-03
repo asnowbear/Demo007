@@ -32,11 +32,11 @@ var M = {};
 function canvasApi(mapId, id) {
   
   var currentSelectedGeo = undefined,// 当前点击选中的图形
-    workMap = undefined,
+    // workMap = undefined,
     dataCollection = undefined,
     paint = undefined,
     nav = undefined,
-    paintMark = undefined
+    // paintMark = undefined
     data = undefined
   
   
@@ -176,6 +176,76 @@ function canvasApi(mapId, id) {
       paintMark.marks = data
       
     },// 把获取到的学生绘制数据字符串原样传过去，要显现出来;，成功返回true，否则返回false
+
+
+    getStudentOkPaints2 : function (teachPaintString) {
+      if (teachPaintString === '' || teachPaintString === undefined) {
+        return false
+      }
+
+      // 反序列化多边形对象集合
+      var fillData = function (collection, datasource) {
+        var fs = datasource.features
+        if (fs) {
+          fs.forEach(function(f){
+            var geo = new MyPolygon()
+            geo.setPosition(f.geometry.coordinates)
+            collection.push(geo)
+          })
+        }
+      }
+
+      var coll = []
+      fillData(coll, JSON.parse(teachPaintString))
+
+      //
+      var findPointInPolygon  = function (polys, mk) {
+        var filts = polys.filter(function(poly) {
+          return WrokMap.containsPointPolygon([mk.x, mk.y], poly.coords )
+        })
+
+        return filts
+      }
+
+      var pointsOutPyCount = 0,
+          polyCountObj = {}
+      var mks = paintMark.marks,
+          mksLen = mks.length
+
+      for (var i = 0 ;i < mksLen; i ++) {
+        var mk = mks[i]
+
+        var polysContainmks = findPointInPolygon(coll, mk)
+        var l = polysContainmks.length
+        // 在外部
+        if (l === 0) {
+          pointsOutPyCount ++
+        } else {
+          // 在内部，需要排除2个点位于一个多边形内的情况（只算一个）
+          if (l === 1) {
+            var kob = polysContainmks[0]
+            if (!polyCountObj.hasOwnProperty(kob.id)) {
+              polyCountObj[kob.id] = 1
+            }
+          }
+          // 内嵌的情况(暂时没有考虑相交的情况，如存在，也不影响统计结果的正确性)
+          else {
+
+            var p1 = polysContainmks[0]
+                p2 = polysContainmks[1]
+            p1 = WrokMap.getInsidePolygon(p1, p2)
+
+            if (!polyCountObj.hasOwnProperty(p1.id)) {
+              polyCountObj[p1.id] = 1
+            }
+          }
+        }
+      }
+
+      var inPyCount = Object.keys(polyCountObj).length
+      var res =  inPyCount - pointsOutPyCount
+      return  res > 0 ? res : 0
+    },
     getStudentOkPaints: function (teachPaintString) {
       if (teachPaintString === '' || teachPaintString === undefined) {
         return false
@@ -188,7 +258,7 @@ function canvasApi(mapId, id) {
           fs.forEach(function(f){
             var geo = new MyPolygon()
             geo.setPosition(f.geometry.coordinates)
-            collection.geos.push(geo)
+            collection.push(geo)
           })
         }
       }
@@ -199,7 +269,7 @@ function canvasApi(mapId, id) {
       // 计算有多少个点在指定多边形内的数量
       var findPointInPolygon  = function (poly, mks) {
         var filts = mks.filter(function(mk) {
-          return WrokMap.containsPointPolygon(poly,[mk.x, mk.y] )
+          return WrokMap.containsPointPolygon([mk.x, mk.y], poly.coords )
         })
         
         return filts

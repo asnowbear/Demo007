@@ -302,3 +302,20 @@ WrokMap.containsPointPolygon = function (point, polygon) {
   
   return flag
 }
+
+
+WrokMap.getInsidePolygon = function (poly1, poly2) {
+  var ext1 = poly1.getEnvelop(),
+      ext2 = poly2.getEnvelop()
+
+  var w1 = ext1[2] - ext1[0],
+      h1 = ext1[3] - ext1[1],
+      w2 = ext2[2] - ext2[0],
+      h2 = ext2[3] - ext2[1]
+
+  if (w1 > w2) {
+    return poly2
+  } else {
+    return poly1
+  }
+}

@@ -90,7 +90,8 @@ Nav.prototype.handleMouseMove = function(evt) {
   }
   
   var movePt = [evt.oldEvent.clientX, evt.oldEvent.clientY]
-  
+  this.onNaving = true
+
   if (this._lastPt) {
     var map = this.map,
       lev = map.getLevel(map.level),
@@ -98,7 +99,7 @@ Nav.prototype.handleMouseMove = function(evt) {
   
     var dx = this._lastPt[0] - movePt[0],
         dy = this._lastPt[1] - movePt[1]
-  
+
     var tempCenter = [dx, dy]
     tempCenter[0] *= lev
     tempCenter[1] *= lev
@@ -108,12 +109,13 @@ Nav.prototype.handleMouseMove = function(evt) {
   
     map.center = tempCenter
     map.refresh()
+
+    this._lastPt = movePt
+    return true
   }
-  
-  this.onNaving = true
+
   this._lastPt = movePt
-  
-  return true
+  return false
 }
 
 Nav.prototype.handleMouseUp = function(evt) {
