@@ -38,7 +38,7 @@ WrokMap.prototype.adjustImage = function (imageWidth, imageHeight) {
   if (imageWidth > imageHeight) {
     
   } else {
-    
+    undefined
   }
 }
 
