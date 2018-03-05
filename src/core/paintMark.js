@@ -6,51 +6,64 @@ function PaintMark (onPaintEnd) {
   this.mark = null
   this.marks = []
   this.active = true
+  this.isCtrlDown = false
   this.onPaintEndFn = onPaintEnd === undefined ? function () {} : onPaintEnd
 
   var me = this
   $(window).keyup(function(evt) {
     var keyCode = evt.keyCode
-    if (keyCode === 46) {
-      if (me.active) {
-        if (me.marks.length > 0) {
-          me.marks.splice(me.marks.length - 1, 1)
-          me.map.refresh()
-        }
-      }
+    if (keyCode === 17) {
+      me.isCtrlDown = false
     }
+    evt.preventDefault()
+  })
 
+  $(window).keydown(function(evt) {
+    var keyCode = evt.keyCode
+    if (keyCode === 17) {
+      me.isCtrlDown = true
+    }
     evt.preventDefault()
   })
 }
 
-PaintMark.prototype.handleEvent = function (evt) {
-  if (!this.active) {
-    return
-  }
-  
-  var ok = true
-  var type = evt.type
-  switch (type) {
-    case EventTag.mouseUp:
-      this.onMouseup(evt)
-      break
-  }
-  
-  return ok
-}
+// PaintMark.prototype.handleEvent = function (evt) {
+//   if (!this.active) {
+//     return
+//   }
+//
+//   var ok = true
+//   var type = evt.type
+//   switch (type) {
+//     case EventTag.mouseUp:
+//       this.onMouseup(evt)
+//       break
+//   }
+//
+//   return ok
+// }
 
-PaintMark.prototype.onMouseup = function (evt) {
+PaintMark.prototype.onMouseup = function (e) {
   if (!this.active) {
     return
   }
-  
+
+  if (!this.isCtrlDown) {
+    return
+  }
+
+  var evt = this.map.coordinateMapping(e)
   var mark = {
     x: evt.mapX,
     y: evt.mapY,
     radius: 10
   }
-  
+
+  if( this.delIfInsertExsitMk(mark) ){
+    this.map.refresh()
+    return
+  }
+
   this.marks.push(mark)
   this.mark = mark
   this.onPaintEndFn(mark)
@@ -59,10 +72,6 @@ PaintMark.prototype.onMouseup = function (evt) {
 }
 
 PaintMark.prototype.draw = function () {
-  if (!this.mark) {
-    return
-  }
-  
   if (this.marks.length === 0) {
     return
   }
@@ -84,6 +93,13 @@ PaintMark.prototype.draw = function () {
 PaintMark.prototype.setMap = function (map) {
   this.map = map
   this.context = map.context
+
+  var container = map.mapDom
+
+  var me = this
+  $(container).mouseup(function(e){
+    me.onMouseup(e)
+  })
 }
 
 PaintMark.prototype.invertMartrix = function (c, offset, end, stride, T, opt_dest) {
@@ -102,4 +118,32 @@ PaintMark.prototype.invertMartrix = function (c, offset, end, stride, T, opt_des
   }
   
   return dest
+}
+
+PaintMark.prototype.delIfInsertExsitMk = function (p) {
+  var mks = this.marks
+
+  var del = -1
+  for (var i = 0;i < mks.length ; i ++) {
+    if (PaintMark.insertPoint(mks[i], p)) {
+      del = i
+      break
+    }
+  }
+
+  if (del > -1) {
+    this.marks.splice(del, 1)
+    return true
+  }
+
+  return false
+}
+
+PaintMark.insertPoint = function (p1, p2) {
+  var d = Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2))
+  if (d <= 7) {
+    return true
+  }
+
+  return false
 }
